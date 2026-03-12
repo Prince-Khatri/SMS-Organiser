@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <!-- Sender Image -->
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/smsCategory"
+        android:layout_width="63dp"
+        android:layout_height="32dp"
+        android:text="Transaction"
+        android:textSize="12sp"
+        app:chipBackgroundColor="#45B8DB"
+        app:chipCornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/smsMessageBody"
+        app:layout_constraintEnd_toStartOf="@+id/smsTimeStamp"
+        app:layout_constraintStart_toEndOf="@+id/senderName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/senderImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/sms_chat"
+        android:background="@drawable/circle_bg"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Sender Name -->
+
+    <!-- Time -->
+
+    <TextView
+        android:id="@+id/senderName"
+        android:layout_width="204dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:text="Amazon"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/smsTimeStamp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/senderImage"
+        app:layout_constraintTop_toTopOf="@id/senderImage" />
+
+    <TextView
+        android:id="@+id/smsTimeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:42 AM"
+        android:textSize="12sp"
+        android:textColor="#888"
+        app:layout_constraintTop_toTopOf="@id/senderName"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Message Body -->
+    <TextView
+        android:id="@+id/smsMessageBody"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Your Amazon order has been shipped and will arrive tomorrow."
+        android:textSize="14sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@id/senderName"
+        app:layout_constraintTop_toBottomOf="@id/senderName"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Category Chip -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
