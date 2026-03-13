@@ -18,6 +18,7 @@ import com.smsorganiser.manager.SMSManager;
 import com.smsorganiser.model.SMSMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,23 +51,28 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 //        bnv.setSelectedItemId(R.id.nav_sms);
-        SMSManager mng = new SMSManager(this);
-        Executors.newSingleThreadExecutor().execute(()->{
-            mng.readSMSAndSave(this);
 
-
-        ArrayList<SMSMessage> msg = (ArrayList<SMSMessage>) mng.getAllSMSMessages();
-
-        SMSAdapter adpt = new SMSAdapter(this, msg);
-
-        runOnUiThread(()->{
+        try {
+            SMSManager mng = new SMSManager(this);
+            SMSAdapter adpt = new SMSAdapter(new ArrayList<>());
             RecyclerView recyclerView = findViewById(R.id.messagesScrollView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adpt);
-        });
+
+            Executors.newSingleThreadExecutor().execute(() -> {
+                mng.readSMSAndSave();
+                mng.syncSMS();
+                ArrayList<SMSMessage> msg = (ArrayList<SMSMessage>) mng.getAllSMSMessages();
+
+                runOnUiThread(() -> {
+                    adpt.updateData(msg);
+                });
 
 
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 

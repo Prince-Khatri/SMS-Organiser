@@ -15,18 +15,29 @@ public class SMSClassifier {
     private OrtEnvironment env;
     private OrtSession session;
 
-    public SMSClassifier(byte[] modelBytes) throws OrtException{
-        env = OrtEnvironment.getEnvironment();
-        session = env.createSession(modelBytes);
+    public SMSClassifier(byte[] modelBytes){
+        try{
+            env = OrtEnvironment.getEnvironment();
+            session = env.createSession(modelBytes);
+        } catch (OrtException e) {
+            throw new RuntimeException(e);
+        }
     }
+    public static String sanitize(String text) {
+        if (text == null) return "";
 
-    public void classify(ArrayList<SMSMessage> listOfSMS) throws Exception{
+        text = text.replaceAll("\\p{C}", " "); // remove control chars
+        text = text.replaceAll("\\s+", " ").trim();
+
+        return text;
+    }
+    public String[] classify(ArrayList<SMSMessage> listOfSMS) throws Exception{
         int noOfSMS = listOfSMS.size();
         String[][] bodies = new String[listOfSMS.size()][1];;
         String[][] addresses = new String[listOfSMS.size()][1];
         for(int i=0;i<noOfSMS;i++){
-            bodies[i][0] = listOfSMS.get(i).getSmsBody();
-            addresses[i][0] = listOfSMS.get(i).getSmsAddress();
+            bodies[i][0] = sanitize(listOfSMS.get(i).getSmsBody());
+            addresses[i][0] = sanitize(listOfSMS.get(i).getSmsAddress());
         }
 
         OnnxTensor bodyTensor = OnnxTensor.createTensor(env, bodies);
@@ -45,6 +56,8 @@ public class SMSClassifier {
             listOfSMS.get(i).setSmsCategory(predictions[i]);
         }
         Log.i("Prediction done for:", String.valueOf(noOfSMS));
+
+        return predictions;
     }
 
 }

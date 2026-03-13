@@ -5,6 +5,7 @@ import android.content.Context;
 import com.smsorganiser.db.AppDatabase;
 import com.smsorganiser.model.SMSMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -18,17 +19,17 @@ public class SMSRepository {
 
 
 
-    public List<SMSMessage> loadAllSMS(){
+    public ArrayList<SMSMessage> loadAllSMS(){
 
-        return smsDao.getAllSMS();
+        return (ArrayList<SMSMessage>) smsDao.getAllSMS();
     }
 
-    public List<SMSMessage> loadAllSMS(int maxRows){
-        return smsDao.getAllSMSWithLimit(maxRows);
+    public ArrayList<SMSMessage> loadAllSMS(int maxRows){
+        return (ArrayList<SMSMessage>) smsDao.getAllSMSWithLimit(maxRows);
     }
 
-    public List<SMSMessage> loadSMSWithCategories(List<String> categories, int maxRows){
-        return smsDao.getSMSByCategory(categories, maxRows);
+    public ArrayList<SMSMessage> loadSMSWithCategories(ArrayList<String> categories, int maxRows){
+        return (ArrayList<SMSMessage>) smsDao.getSMSByCategory(categories, maxRows);
     }
 
     public long getLastSMSID(){
@@ -36,9 +37,7 @@ public class SMSRepository {
     }
 
 
-    public void saveListOfSMS(List<SMSMessage> listOfSMS) {
-        Executors.newSingleThreadExecutor().execute( ()->{
+    public void saveListOfSMS(ArrayList<SMSMessage> listOfSMS) {
             smsDao.insertBulkSMS(listOfSMS);
-        });
     }
 }

@@ -15,6 +15,7 @@ import com.smsorganiser.R;
 import com.smsorganiser.model.SMSMessage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,10 +23,8 @@ import java.util.Locale;
 public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.SmsViewHolder> {
 
     private List<SMSMessage> smsList;
-    private Context context;
 
-    public SMSAdapter(Context context, List<SMSMessage> smsList) {
-        this.context = context;
+    public SMSAdapter(List<SMSMessage> smsList) {
         this.smsList = smsList;
     }
 
@@ -33,7 +32,7 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.SmsViewHolder> {
     @Override
     public SmsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context)
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.sms_items, parent, false);
 
         return new SmsViewHolder(view);
@@ -58,6 +57,12 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.SmsViewHolder> {
         return smsList.size();
     }
 
+    public void updateData(ArrayList<SMSMessage> listOfSMS){
+        smsList.clear();
+        smsList.addAll(listOfSMS);
+        notifyDataSetChanged();
+    }
+
     public static class SmsViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgSender;
@@ -76,4 +81,5 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.SmsViewHolder> {
             chipCategory = itemView.findViewById(R.id.smsCategory);
         }
     }
+
 }

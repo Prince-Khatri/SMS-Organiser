@@ -5,32 +5,42 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.smsorganiser.classifier.SMSClassifier;
+import com.smsorganiser.classifier.SMSInferenceService;
 import com.smsorganiser.model.SMSMessage;
 import com.smsorganiser.repository.SMSDao;
 import com.smsorganiser.repository.SMSRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import ai.onnxruntime.OrtException;
 
 public class SMSManager {
 
     int maxRows=50;
     SMSRepository repo;
+    SMSInferenceService smsInferenceService;
+    Context context;
 
-    public SMSManager(Context context){
+
+    public SMSManager(Context context) throws Exception{
+        this.context = context;
         this.repo = new SMSRepository(context);
+        this.smsInferenceService = new SMSInferenceService(context);
     }
-public void readSMSAndSave(Context context){
+public void readSMSAndSave(){
     /*
     * @param context Android context for contextResolver
     * this function reads sms from device and save them in the sqlite table using repo->smsdao
     * */
-    List<SMSMessage> listOfSMS = new ArrayList<>();
+    ArrayList<SMSMessage> listOfSMS = new ArrayList<>();
     Long last = repo.getLastSMSID();
     long lastReadSMSID = last==null?-1:last;
 
-    Cursor cur = context.getContentResolver().query(
+    Cursor cur = this.context.getContentResolver().query(
             Uri.parse("content://sms/inbox"),
             null,
             null,
@@ -58,13 +68,27 @@ public void readSMSAndSave(Context context){
 
 }
 
-    public List<SMSMessage> getSMSMessages(List<String>categories){
+    public ArrayList<SMSMessage> getSMSMessages(ArrayList<String>categories){
         return repo.loadSMSWithCategories(categories, maxRows);
     }
-    public List<SMSMessage> getAllSMSMessages(){
-
-
+    public ArrayList<SMSMessage> getAllSMSMessages(){
         return repo.loadAllSMS();
+    }
+
+    public void syncSMS(){
+        /*
+        * Don't run  without creating thread.
+        * */
+        try{
+            ArrayList<SMSMessage> listOfSMS = this.getAllSMSMessages();
+            SMSInferenceService smsInferenceService = SMSInferenceService.getInstance(context);
+            smsInferenceService.classifySMS(listOfSMS);
+            repo.saveListOfSMS(listOfSMS);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }
