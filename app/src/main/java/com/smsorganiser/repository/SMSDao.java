@@ -14,7 +14,7 @@ public interface SMSDao {
     void insertSMS(SMSMessage sms);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertBulkSMS( List<SMSMessage> listOfSMS);
-    @Query("Select * From sms_table")
+    @Query("Select * From sms_table Order by smsID DESC")
      List<SMSMessage> getAllSMS();
     @Query("Select * From sms_table Limit :maxRows")
      List<SMSMessage> getAllSMSWithLimit(int maxRows);
