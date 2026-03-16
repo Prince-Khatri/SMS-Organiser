@@ -28,8 +28,8 @@ public class SMSRepository {
         return (ArrayList<SMSMessage>) smsDao.getAllSMSWithLimit(maxRows);
     }
 
-    public ArrayList<SMSMessage> loadSMSWithCategories(ArrayList<String> categories, int maxRows){
-        return (ArrayList<SMSMessage>) smsDao.getSMSByCategory(categories, maxRows);
+    public ArrayList<SMSMessage> loadSMSWithCategories(ArrayList<String> categories){
+        return (ArrayList<SMSMessage>) smsDao.getSMSByCategory(categories);
     }
 
     public long getLastSMSID(){

@@ -19,8 +19,8 @@ public interface SMSDao {
     @Query("Select * From sms_table Limit :maxRows")
      List<SMSMessage> getAllSMSWithLimit(int maxRows);
 
-    @Query("SELECT * FROM sms_table WHERE smsCategory IN (:categories) LIMIT :maxRows")
-     List<SMSMessage> getSMSByCategory( List<String> categories, int maxRows);
+    @Query("SELECT * FROM sms_table WHERE smsCategory IN (:categories) Order By smsID desc")
+     List<SMSMessage> getSMSByCategory( List<String> categories);
 
     @Query("Update sms_table set smsCategory=:category where smsID in (:ids)")
     void updateCategory( List<Integer> ids, String category);

@@ -12,17 +12,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.smsorganiser.R;
 import com.smsorganiser.adapter.SMSAdapter;
 import com.smsorganiser.manager.SMSManager;
 import com.smsorganiser.model.SMSMessage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-
+    ChipGroup chipGroupCategory;
+    BottomNavigationView bnv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        BottomNavigationView bnv = findViewById(R.id.navigationView);
+        bnv = findViewById(R.id.navigationView);
+
+
         bnv.setSelectedItemId(R.id.nav_sms);
         bnv.setOnItemSelectedListener(e->{
             if(e.getItemId()==R.id.nav_home) {
@@ -52,17 +59,16 @@ public class MainActivity extends AppCompatActivity {
         });
 //        bnv.setSelectedItemId(R.id.nav_sms);
 
+        SMSAdapter adpt = new SMSAdapter(new ArrayList<>());
         try {
             SMSManager mng = new SMSManager(this);
-            SMSAdapter adpt = new SMSAdapter(new ArrayList<>());
             RecyclerView recyclerView = findViewById(R.id.messagesScrollView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adpt);
 
             Executors.newSingleThreadExecutor().execute(() -> {
-                mng.readSMSAndSave();
-                mng.syncSMS();
-                ArrayList<SMSMessage> msg = (ArrayList<SMSMessage>) mng.getAllSMSMessages();
+                mng.loadAndSyncMessages();
+                ArrayList<SMSMessage> msg = mng.refreshMessages();
 
                 runOnUiThread(() -> {
                     adpt.updateData(msg);
@@ -73,6 +79,30 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        chipGroupCategory = new ChipGroup(this);
+
+        chipGroupCategory.setOnCheckedStateChangeListener((group, checkedId)->{
+            Set<String> categories = new HashSet<>();
+            for(int id:checkedId){
+                Chip chip = findViewById(id);
+                categories.add(chip.getText().toString());
+            }
+
+            try{
+                SMSManager manager = SMSManager.getInstance(this);
+                manager.setFilter(categories);
+                Executors.newSingleThreadExecutor().execute(()->{
+                    ArrayList<SMSMessage> msg = manager.refreshMessages();
+                    runOnUiThread(()->{
+                        adpt.updateData(msg);
+                    });
+
+                });
+                manager.refreshMessages();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
 

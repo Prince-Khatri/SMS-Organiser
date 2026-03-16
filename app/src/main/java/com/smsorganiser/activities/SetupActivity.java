@@ -13,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.smsorganiser.R;
 
 public class SetupActivity extends AppCompatActivity {
-
+    BottomNavigationView bnv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +24,7 @@ public class SetupActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        BottomNavigationView bnv = findViewById(R.id.navigationView);
+        bnv = findViewById(R.id.navigationView);
         bnv.setSelectedItemId(R.id.nav_home);
         bnv.setOnItemSelectedListener(e->{
             if(e.getItemId()==R.id.nav_home) {
