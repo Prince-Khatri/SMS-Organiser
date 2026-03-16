@@ -20,10 +20,16 @@ import ai.onnxruntime.OrtException;
 
 public class SMSManager {
 
+    /*
+    * Made class singletone
+    * */
+
     int maxRows=50;
     SMSRepository repo;
     SMSInferenceService smsInferenceService;
     Context context;
+
+    public static SMSManager instance;
 
 
     public SMSManager(Context context) throws Exception{
@@ -31,7 +37,14 @@ public class SMSManager {
         this.repo = new SMSRepository(context);
         this.smsInferenceService = new SMSInferenceService(context);
     }
-public void readSMSAndSave(){
+
+    public static synchronized SMSManager getInstance(Context context) throws Exception {
+        if(instance==null){
+            instance = new SMSManager(context);
+        }
+        return instance;
+    }
+    public void readSMSAndSave(){
     /*
     * @param context Android context for contextResolver
     * this function reads sms from device and save them in the sqlite table using repo->smsdao
@@ -56,8 +69,9 @@ public void readSMSAndSave(){
 
                 String smsBody = cur.getString(cur.getColumnIndexOrThrow("body"));
                 String smsAddress = cur.getString(cur.getColumnIndexOrThrow("address"));
+                long smsTimeStamp = cur.getLong(cur.getColumnIndexOrThrow("date"));
 
-                listOfSMS.add(new SMSMessage(smsID, smsBody, smsAddress));
+                listOfSMS.add(new SMSMessage(smsID, smsBody, smsAddress, smsTimeStamp));
             }
             else break;
         }

@@ -11,8 +11,8 @@
         android:id="@+id/appName"
         android:layout_width="285dp"
         android:layout_height="35dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
         android:text="Smart SMS Organiser"
         android:textAlignment="center"
         android:textSize="24sp"
@@ -24,9 +24,9 @@
         android:layout_width="51dp"
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@+id/appName"
-        app:layout_constraintHorizontal_bias="0.87"
+        app:layout_constraintHorizontal_bias="0.851"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -107,9 +107,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesScrollView"
-        android:layout_width="349dp"
-        android:layout_height="481dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="344dp"
+        android:layout_height="514dp"
+        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toTopOf="@+id/navigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -118,7 +118,6 @@
         android:id="@+id/navigationView"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

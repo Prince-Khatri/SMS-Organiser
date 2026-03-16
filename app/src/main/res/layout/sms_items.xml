@@ -16,7 +16,7 @@
         android:textSize="12sp"
         app:chipBackgroundColor="#45B8DB"
         app:chipCornerRadius="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/smsMessageBody"
+        app:layout_constraintBottom_toTopOf="@+id/smsMessageScroll"
         app:layout_constraintEnd_toStartOf="@+id/smsTimeStamp"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/senderName"
@@ -63,7 +63,7 @@
 
     <!-- Message Body -->
     <TextView
-        android:id="@+id/smsMessageBody"
+        android:id="@+id/smsMessageScroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Your Amazon order has been shipped and will arrive tomorrow."

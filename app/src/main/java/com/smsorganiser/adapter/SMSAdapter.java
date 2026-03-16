@@ -1,6 +1,6 @@
 package com.smsorganiser.adapter;
 
-import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.smsorganiser.R;
+import com.smsorganiser.activities.MessageActivity;
 import com.smsorganiser.model.SMSMessage;
 
 import java.text.SimpleDateFormat;
@@ -43,12 +44,20 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.SmsViewHolder> {
 
         SMSMessage sms = smsList.get(position);
 
-        holder.txtSender.setText("Sender name");
+        holder.txtSender.setText(sms.getSmsAddress());
         holder.txtBody.setText(sms.getSmsBody());
         holder.chipCategory.setText(sms.getSmsCategory());
+        holder.itemView.setOnClickListener(e->{
+            Intent intent = new Intent(e.getContext(), MessageActivity.class);
+            intent.putExtra("senderName", sms.getSmsAddress());
+            intent.putExtra("messageBody", sms.getSmsBody());
+            intent.putExtra("smsCategory", sms.getSmsCategory());
+            e.getContext().startActivity(intent);
+
+        });
 
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-        String time = sdf.format(new Date(1710235200000L));
+        String time = sdf.format(new Date(sms.getTimeStamp()));
         holder.txtTime.setText(time);
     }
 
@@ -76,7 +85,7 @@ public class SMSAdapter extends RecyclerView.Adapter<SMSAdapter.SmsViewHolder> {
 
             imgSender = itemView.findViewById(R.id.senderImage);
             txtSender = itemView.findViewById(R.id.senderName);
-            txtBody = itemView.findViewById(R.id.smsMessageBody);
+            txtBody = itemView.findViewById(R.id.smsMessageScroll);
             txtTime = itemView.findViewById(R.id.smsTimeStamp);
             chipCategory = itemView.findViewById(R.id.smsCategory);
         }

@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 import com.smsorganiser.model.SMSMessage;
 import com.smsorganiser.repository.SMSDao;
 
-@Database(entities = {SMSMessage.class}, version = 1)
+@Database(entities = {SMSMessage.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract SMSDao smsDao();

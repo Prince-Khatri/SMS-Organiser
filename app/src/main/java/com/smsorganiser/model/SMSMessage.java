@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class SMSMessage {
     @PrimaryKey()
     public long smsID;
+    public long timeStamp;
     public String smsCategory, smsBody, smsAddress;
     public SMSMessage(){}
     public SMSMessage(long smsID, String smsBody, String smsAddress) {
@@ -14,6 +15,11 @@ public class SMSMessage {
         this.smsAddress = smsAddress;
         this.smsBody = smsBody;
     }
+    public SMSMessage(long smsID, String smsBody, String smsAddress, long timeStamp) {
+        this(smsID, smsBody, smsAddress);
+        this.timeStamp = timeStamp;
+    }
+
 
     public void setSmsCategory(String smsCategory) {
         this.smsCategory = smsCategory;
@@ -31,5 +37,9 @@ public class SMSMessage {
 
     public String getSmsCategory() {
         return smsCategory;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
     }
 }
