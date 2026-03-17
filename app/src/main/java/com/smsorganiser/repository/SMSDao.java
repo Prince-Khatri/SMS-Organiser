@@ -5,8 +5,10 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.smsorganiser.model.CategoryCount;
 import com.smsorganiser.model.SMSMessage;
 
+import java.util.ArrayList;
 import java.util. List;
 @Dao
 public interface SMSDao {
@@ -19,8 +21,8 @@ public interface SMSDao {
     @Query("Select * From sms_table Limit :maxRows")
      List<SMSMessage> getAllSMSWithLimit(int maxRows);
 
-    @Query("SELECT * FROM sms_table WHERE smsCategory IN (:categories) LIMIT :maxRows")
-     List<SMSMessage> getSMSByCategory( List<String> categories, int maxRows);
+    @Query("SELECT * FROM sms_table WHERE smsCategory IN (:categories) Order By smsID desc")
+     List<SMSMessage> getSMSByCategory( List<String> categories);
 
     @Query("Update sms_table set smsCategory=:category where smsID in (:ids)")
     void updateCategory( List<Integer> ids, String category);
@@ -28,5 +30,7 @@ public interface SMSDao {
     @Query("SELECT COALESCE(MAX(smsID),-1) from sms_table")
     long getLastSMSID();
 
+    @Query("Select smsCategory as categoryName ,count(*) as noOfSMS from sms_table group by smsCategory")
+    List<CategoryCount> getCategoryCounts();
 
 }

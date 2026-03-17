@@ -48,49 +48,59 @@
             android:orientation="vertical">
 
             <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:singleSelection="false">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/allChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All" />
+                    android:text="All"
+                    android:checkable="true"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/personalChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Personal" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/otpChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="OTP" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/transactionalChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Transactional" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/onlineOrdersChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Online-Orders" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/updatesChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="updates" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/spamChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="SPAM" />
 
 
@@ -98,6 +108,7 @@
                     android:id="@+id/promotionChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Promotion" />
 
 
