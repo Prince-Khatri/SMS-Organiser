@@ -1,7 +1,12 @@
 package com.smsorganiser.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +16,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.smsorganiser.R;
+import com.smsorganiser.manager.SMSManager;
+import com.smsorganiser.manager.SetupManager;
+
+import java.util.concurrent.Executors;
 
 public class SetupActivity extends AppCompatActivity {
     BottomNavigationView bnv;
+    SetupManager setupManagerInstance;
+    SMSManager smsManagerInstance;
+    TextView setupMessageTv;
+    Button setupButton;
+    CheckBox termsAndConditionsCheckbox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +56,75 @@ public class SetupActivity extends AppCompatActivity {
             }
             return false;
         });
-//        bnv.setSelectedItemId(R.id.nav_home);
+
+        try {
+            setupManagerInstance = SetupManager.getInstance(this);
+            if (setupManagerInstance.isSetupDone()) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+                return;
+            }
+            smsManagerInstance = SMSManager.getInstance(this);
+            initialiseView();
+            setupButton.setOnClickListener(e->{
+                setupListener();
+            });
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void setupListener() {
+        if(!termsAndConditionsCheckbox.isChecked()){
+            setupMessageTv.setText("Please accept Terms & Conditions");
+            return;
+        }
+        if(!setupManagerInstance.haveSMSPermission()){
+            requestPermissions(
+                    new String[]{android.Manifest.permission.READ_SMS},
+                    100
+            );
+            return;
+        }
+        setupButton.setEnabled(false);
+        setupMessageTv.setText("Please Wait, Setup Inprogress...");
+
+        Executors.newSingleThreadExecutor().execute(()->{
+            setupManagerInstance.runInitialSetup();
+            runOnUiThread(()->{
+                setupMessageTv.setText("Setup Complete ✅");
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            });
+        });
+
 
     }
+
+    void initialiseView(){
+        setupMessageTv = findViewById(R.id.setupMessage);
+        setupButton = findViewById(R.id.setupButton);
+        termsAndConditionsCheckbox= findViewById(R.id.termsAndConditionsCheckbox);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 100){
+            if(grantResults.length>0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                setupButton.performClick();
+            }
+            else{
+                setupMessageTv.setText("SMS permission required");
+            }
+        }
+
+
+    }
+
+
 }

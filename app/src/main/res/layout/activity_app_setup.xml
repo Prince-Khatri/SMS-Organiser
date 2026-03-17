@@ -53,7 +53,7 @@
         app:srcCompat="@drawable/sms_setup_icon" />
 
     <Button
-        android:id="@+id/initialiseClassification"
+        android:id="@+id/setupButton"
         android:layout_width="184dp"
         android:layout_height="53dp"
         android:layout_marginBottom="40dp"
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="Click the below button to start setup."
-        app:layout_constraintBottom_toTopOf="@+id/initialiseClassification"
+        app:layout_constraintBottom_toTopOf="@+id/setupButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +90,7 @@
         app:layout_constraintVertical_bias="0.423" />
 
     <CheckBox
-        android:id="@+id/termsAndConditionsButton"
+        android:id="@+id/termsAndConditionsCheckbox"
         android:layout_width="227dp"
         android:layout_height="22dp"
         android:layout_marginTop="16dp"
