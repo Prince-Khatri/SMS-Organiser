@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.smsorganiser.classifier.SMSClassifier;
 import com.smsorganiser.classifier.SMSInferenceService;
+import com.smsorganiser.model.CategoryCount;
 import com.smsorganiser.model.SMSMessage;
 import com.smsorganiser.repository.SMSDao;
 import com.smsorganiser.repository.SMSRepository;
@@ -93,7 +94,6 @@ public class SMSManager {
     public ArrayList<SMSMessage> getSMSMessages(){
         ArrayList<String> categories = this.getFilter();
         if(categories.isEmpty()) return this.repo.loadAllSMS();
-        categories.replaceAll(String::toLowerCase);
         return repo.loadSMSWithCategories(categories);
     }
     public ArrayList<SMSMessage> refreshMessages(){
@@ -129,6 +129,10 @@ public class SMSManager {
     public ArrayList<String> getFilter(){
         Set<String> set = pref.getStringSet("filters", new HashSet<>());
         return new ArrayList<>(set);
+    }
+
+    public ArrayList<CategoryCount> getDashboardStats(){
+        return repo.getCategoryCounts();
     }
 
 

@@ -5,8 +5,10 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.smsorganiser.model.CategoryCount;
 import com.smsorganiser.model.SMSMessage;
 
+import java.util.ArrayList;
 import java.util. List;
 @Dao
 public interface SMSDao {
@@ -28,5 +30,7 @@ public interface SMSDao {
     @Query("SELECT COALESCE(MAX(smsID),-1) from sms_table")
     long getLastSMSID();
 
+    @Query("Select smsCategory as categoryName ,count(*) as noOfSMS from sms_table group by smsCategory")
+    List<CategoryCount> getCategoryCounts();
 
 }

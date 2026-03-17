@@ -54,11 +54,10 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
-        android:layout_width="338dp"
-        android:layout_height="275dp"
-        android:layout_marginBottom="136dp"
+        android:layout_width="325dp"
+        android:layout_height="304dp"
+        android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toTopOf="@+id/navigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

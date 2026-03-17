@@ -79,13 +79,16 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        chipGroupCategory = new ChipGroup(this);
+        chipGroupCategory = findViewById(R.id.chipGroup);
 
         chipGroupCategory.setOnCheckedStateChangeListener((group, checkedId)->{
             Set<String> categories = new HashSet<>();
             for(int id:checkedId){
                 Chip chip = findViewById(id);
-                categories.add(chip.getText().toString());
+                categories.add(chip.getText().toString().toLowerCase());
+            }
+            if(categories.contains("all")){
+                categories.clear();
             }
 
             try{
@@ -97,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                         adpt.updateData(msg);
                     });
 
-                });
                 manager.refreshMessages();
+                });
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

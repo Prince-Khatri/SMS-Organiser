@@ -3,6 +3,7 @@ package com.smsorganiser.repository;
 import android.content.Context;
 
 import com.smsorganiser.db.AppDatabase;
+import com.smsorganiser.model.CategoryCount;
 import com.smsorganiser.model.SMSMessage;
 
 import java.util.ArrayList;
@@ -39,5 +40,8 @@ public class SMSRepository {
 
     public void saveListOfSMS(ArrayList<SMSMessage> listOfSMS) {
             smsDao.insertBulkSMS(listOfSMS);
+    }
+    public ArrayList<CategoryCount> getCategoryCounts(){
+        return (ArrayList<CategoryCount>) this.smsDao.getCategoryCounts();
     }
 }
