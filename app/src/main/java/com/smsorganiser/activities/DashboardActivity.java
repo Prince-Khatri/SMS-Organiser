@@ -20,6 +20,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.smsorganiser.R;
 import com.smsorganiser.manager.SMSManager;
+import com.smsorganiser.manager.SetupManager;
 import com.smsorganiser.model.CategoryCount;
 
 import java.util.ArrayList;
@@ -35,6 +36,12 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        SetupManager setupManagerInstance = SetupManager.getInstance(this);
+        if(!setupManagerInstance.isSetupDone()){
+            Intent intent = new Intent(this, SetupActivity.class);
+            startActivity(intent);
+            return;
+        }
         setContentView(R.layout.activity_dashboard);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

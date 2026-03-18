@@ -17,6 +17,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.smsorganiser.R;
 import com.smsorganiser.adapter.SMSAdapter;
 import com.smsorganiser.manager.SMSManager;
+import com.smsorganiser.manager.SetupManager;
 import com.smsorganiser.model.SMSMessage;
 
 import java.util.ArrayList;
@@ -31,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        SetupManager setupManagerInstance = SetupManager.getInstance(this);
+        if(!setupManagerInstance.isSetupDone()){
+            Intent intent = new Intent(this, SetupActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

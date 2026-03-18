@@ -101,7 +101,7 @@ public class SetupActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(()->{
             setupManagerInstance.runInitialSetup();
             runOnUiThread(()->{
-                setupMessageTv.setText("Setup Complete ✅");
+                setupMessageTv.setText("✔ Setup Complete");
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             });
