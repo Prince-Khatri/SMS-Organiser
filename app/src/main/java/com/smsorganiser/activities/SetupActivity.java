@@ -43,7 +43,7 @@ public class SetupActivity extends AppCompatActivity {
         bnv.setSelectedItemId(R.id.nav_home);
         bnv.setOnItemSelectedListener(e->{
             if(e.getItemId()==R.id.nav_home) {
-                startActivity(new Intent(this, SetupActivity.class));
+//                startActivity(new Intent(this, SetupActivity.class));
                 return true;
             }
             else if(e.getItemId()==R.id.nav_sms) {
@@ -124,6 +124,18 @@ public class SetupActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        if(checkSelfPermission(Manifest.permission.READ_SMS)
+            != PackageManager.PERMISSION_GRANTED
+        ){
+            startActivity(new Intent(this, SetupActivity.class));
+            finish();
+        }
     }
 
 
