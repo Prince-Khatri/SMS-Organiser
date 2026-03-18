@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setAdapter(adpt);
 
             Executors.newSingleThreadExecutor().execute(() -> {
-                mng.loadAndSyncMessages();
+//                mng.loadAndSyncMessages();
                 ArrayList<SMSMessage> msg = mng.refreshMessages();
 
                 runOnUiThread(() -> {
