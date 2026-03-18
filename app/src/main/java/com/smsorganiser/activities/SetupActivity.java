@@ -1,9 +1,11 @@
 package com.smsorganiser.activities;
 
-import android.Manifest;
+import static android.Manifest.permission.READ_SMS;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -40,17 +42,17 @@ public class SetupActivity extends AppCompatActivity {
             return insets;
         });
         bnv = findViewById(R.id.navigationView);
-        bnv.setSelectedItemId(R.id.nav_home);
+        bnv.setSelectedItemId(R.id.nav_setup);
         bnv.setOnItemSelectedListener(e->{
-            if(e.getItemId()==R.id.nav_home) {
+            if(e.getItemId()==R.id.nav_setup) {
 //                startActivity(new Intent(this, SetupActivity.class));
                 return true;
             }
-            else if(e.getItemId()==R.id.nav_sms) {
+            else if(e.getItemId()==R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
-            else if(e.getItemId()==R.id.nav_stats){
+            else if(e.getItemId()==R.id.nav_dash){
                 startActivity(new Intent(this, DashboardActivity.class));
                 return true;
             }
@@ -82,8 +84,13 @@ public class SetupActivity extends AppCompatActivity {
             return;
         }
         if(!setupManagerInstance.haveSMSPermission()){
+
+            if(shouldShowRequestPermissionRationale(READ_SMS)){
+                setupMessageTv.setText("We Need SMS permission to categorize your messages.");
+            }
+
             requestPermissions(
-                    new String[]{android.Manifest.permission.READ_SMS},
+                    new String[]{READ_SMS},
                     100
             );
             return;
@@ -114,12 +121,20 @@ public class SetupActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == 100){
             if(grantResults.length>0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    grantResults[0] == PERMISSION_GRANTED)
             {
                 setupButton.performClick();
             }
             else{
-                setupMessageTv.setText("SMS permission required");
+                if(!shouldShowRequestPermissionRationale(READ_SMS)){
+                    setupMessageTv.setText("Permission permanently denied. Enable it form settings.");
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(android.net.Uri.parse("package:"+getPackageName()));
+                    startActivity(intent);
+                }
+                else {
+                    setupMessageTv.setText("SMS permission required");
+                }
             }
         }
 
@@ -129,12 +144,11 @@ public class SetupActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-
-        if(checkSelfPermission(Manifest.permission.READ_SMS)
-            != PackageManager.PERMISSION_GRANTED
-        ){
-            startActivity(new Intent(this, SetupActivity.class));
-            finish();
+        boolean setupDone = setupManagerInstance !=null && setupManagerInstance.isSetupDone();
+        boolean hasPermission = checkSelfPermission(READ_SMS) != PERMISSION_GRANTED;
+        if(setupDone && hasPermission){
+            setupManagerInstance.clearSetupFlag();
+            recreate();
         }
     }
 

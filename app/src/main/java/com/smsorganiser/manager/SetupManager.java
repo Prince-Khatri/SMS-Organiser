@@ -35,6 +35,10 @@ public class SetupManager {
         this.pref.edit().putBoolean(pref_status, true).apply();
     }
 
+    public void clearSetupFlag() {
+        this.pref.edit().putBoolean(pref_status, false).apply();
+    }
+
     public boolean haveSMSPermission(){
         return ContextCompat.checkSelfPermission(
                 this.context,
