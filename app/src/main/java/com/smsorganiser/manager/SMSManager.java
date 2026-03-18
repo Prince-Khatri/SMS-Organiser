@@ -34,6 +34,7 @@ public class SMSManager {
     SMSRepository repo;
     SMSInferenceService smsInferenceService;
     Context context;
+    private static String prefFileName = "app_prefs";
 
     SharedPreferences pref;
 
@@ -44,7 +45,7 @@ public class SMSManager {
         this.context = context;
         this.repo = new SMSRepository(context);
         this.smsInferenceService = SMSInferenceService.getInstance(context);
-        pref = context.getSharedPreferences("app_prefs", MODE_PRIVATE);
+        pref = context.getSharedPreferences(prefFileName, MODE_PRIVATE);
     }
 
     public static synchronized SMSManager getInstance(Context context) throws Exception {
