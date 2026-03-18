@@ -3,7 +3,6 @@ package com.smsorganiser.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -24,10 +22,8 @@ import com.smsorganiser.R;
 import com.smsorganiser.manager.SMSManager;
 import com.smsorganiser.model.CategoryCount;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -52,18 +48,17 @@ public class DashboardActivity extends AppCompatActivity {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        bnv.setSelectedItemId(R.id.nav_stats);
+        bnv.setSelectedItemId(R.id.nav_dash);
         bnv.setOnItemSelectedListener(e->{
-            if(e.getItemId()==R.id.nav_home) {
+            if(e.getItemId()==R.id.nav_setup) {
                 startActivity(new Intent(this, SetupActivity.class));
                 return true;
             }
-            else if(e.getItemId()==R.id.nav_sms) {
+            else if(e.getItemId()==R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
-            else if(e.getItemId()==R.id.nav_stats){
-                startActivity(new Intent(this, DashboardActivity.class));
+            else if(e.getItemId()==R.id.nav_dash){
                 return true;
             }
             return false;

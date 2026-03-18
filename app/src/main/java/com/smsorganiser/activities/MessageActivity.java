@@ -46,7 +46,7 @@ public class MessageActivity extends AppCompatActivity {
         category.setText(smsCategory);
 
         BottomNavigationView bnv = findViewById(R.id.navigationView);
-        bnv.setSelectedItemId(R.id.nav_sms);
+        bnv.setSelectedItemId(R.id.nav_home);
 
     }
 }

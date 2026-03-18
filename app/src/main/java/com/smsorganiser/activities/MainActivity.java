@@ -21,7 +21,6 @@ import com.smsorganiser.model.SMSMessage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
@@ -41,17 +40,16 @@ public class MainActivity extends AppCompatActivity {
         bnv = findViewById(R.id.navigationView);
 
 
-        bnv.setSelectedItemId(R.id.nav_sms);
+        bnv.setSelectedItemId(R.id.nav_home);
         bnv.setOnItemSelectedListener(e->{
-            if(e.getItemId()==R.id.nav_home) {
+            if(e.getItemId()==R.id.nav_setup) {
                 startActivity(new Intent(this, SetupActivity.class));
                 return true;
             }
-            else if(e.getItemId()==R.id.nav_sms) {
-                startActivity(new Intent(this, MainActivity.class));
+            else if(e.getItemId()==R.id.nav_home) {
                 return true;
             }
-            else if(e.getItemId()==R.id.nav_stats){
+            else if(e.getItemId()==R.id.nav_dash){
                 startActivity(new Intent(this, DashboardActivity.class));
                 return true;
             }
