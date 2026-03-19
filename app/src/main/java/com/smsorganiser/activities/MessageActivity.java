@@ -18,6 +18,7 @@ public class MessageActivity extends AppCompatActivity {
     TextView senderName, smsBody;
     Chip category;
     ImageView senderImage;
+    BottomNavigationView bnv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,24 @@ public class MessageActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        bnv = findViewById(R.id.navigationView);
+        bnv.setSelectedItemId(R.id.nav_home);
+        bnv.setOnItemSelectedListener(e->{
+            if(e.getItemId()==R.id.nav_setup) {
+                startActivity(new Intent(this, SetupActivity.class));
+                return true;
+            }
+            else if(e.getItemId()==R.id.nav_home) {
+                return true;
+            }
+            else if(e.getItemId()==R.id.nav_dash){
+                startActivity(new Intent(this, DashboardActivity.class));
+                return true;
+            }
+            return false;
+        });
+
 
 //        Connect to views
         Intent intent = getIntent();
