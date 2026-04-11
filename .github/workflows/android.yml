@@ -36,15 +36,22 @@ jobs:
     # Signing the APK
     - name: Sign APK
       if: github.event_name == 'workflow_dispatch'
-      uses: r0adkll/sign-android-release@v1
-      id: sign_app
-      with:
-        releaseDirectory: app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
-        alias: ${{ secrets.KEY_ALIAS }}
-        keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-        buildToolsVersion: 36.0.0
+      run: |
+        # 1. Decode the keystore from your secret
+        echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > release.jks
+        
+        # 2. Find the build-tools (zipalign and apksigner)
+        BUILD_TOOLS_PATH=$(find $ANDROID_HOME/build-tools -name "apksigner" | head -n 1 | xargs dirname)
+        
+        # 3. Zipalign the APK
+        $BUILD_TOOLS_PATH/zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-signed.apk
+        
+        # 4. Sign the APK
+        $BUILD_TOOLS_PATH/apksigner sign --ks release.jks --ks-key-alias "${{ secrets.KEY_ALIAS }}" --ks-pass pass:"${{ secrets.KEYSTORE_PASSWORD }}" --key-pass pass:"${{ secrets.KEY_PASSWORD }}" --out app-release-final.apk app-release-signed.apk
+        
+        # 5. Clean up the keystore file
+        rm release.jks
+
 
     # Creating the release
     - name: Create Release
@@ -53,6 +60,6 @@ jobs:
       with:
         tag_name: v1.0.${{ github.run_number }}
         name: Signed Release v1.0.${{ github.run_number }}
-        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
+        files: app-release-final.apk 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
