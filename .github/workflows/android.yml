@@ -27,23 +27,31 @@ jobs:
     # check build 
     - name: Build with Gradle
       run: ./gradlew build
-    # Creating apk
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
-    # uploading apk
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
+
+    # Release APK when Manually Triggred
+    - name: Build Release APK
+      if: github.event_name == 'workflow_dispatch'
+      run: ./gradlew assembleRelease
+
+    # Signing the APK
+    - name: Sign APK
+      if: github.event_name == 'workflow_dispatch'
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
       with:
-        name: app-debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
-    # Creating release
+        releaseDirectory: app/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
+        alias: ${{ secrets.KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+    # Creating the release
     - name: Create Release
       if: github.event_name == 'workflow_dispatch'
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
-        tag_name: v0.0.${{github.run_number}}
-        name: APK Release
-        files: app/build/outputs/apk/debug/app-debug.apk
+        tag_name: v1.0.${{ github.run_number }}
+        name: Signed Release v1.0.${{ github.run_number }}
+        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
