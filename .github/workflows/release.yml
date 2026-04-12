@@ -1,0 +1,80 @@
+name: Android CD (Release)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout code
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Setup Java
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    # Grant permission
+    - name: Grant execute permission
+      run: chmod +x gradlew
+
+    # Build Release APK
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+
+    # Sign APK
+    - name: Sign APK
+      id: sign_app
+      run: |
+        # Decode keystore
+        echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > release.jks
+
+        # Locate build tools
+        BUILD_TOOLS_PATH=$(find $ANDROID_HOME/build-tools -name "apksigner" | head -n 1 | xargs dirname)
+
+        # Zipalign
+        $BUILD_TOOLS_PATH/zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
+
+        # Sign APK
+        $BUILD_TOOLS_PATH/apksigner sign \
+          --ks release.jks \
+          --ks-key-alias "${{ secrets.KEY_ALIAS }}" \
+          --ks-pass pass:"${{ secrets.KEYSTORE_PASSWORD }}" \
+          --key-pass pass:"${{ secrets.KEY_PASSWORD }}" \
+          --out app-release-final.apk \
+          app-release-aligned.apk
+
+        # Verify signature (optional but good)
+        $BUILD_TOOLS_PATH/apksigner verify app-release-final.apk
+
+        # Output file path
+        echo "signedReleaseFile=app-release-final.apk" >> $GITHUB_OUTPUT
+
+        # Cleanup
+        rm release.jks
+
+    # Verify file exists 
+    - name: Verify APK
+      run: ls -lh app-release-final.apk
+
+    # Create GitHub Release
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: SMS Organizer ${{ github.ref_name }}
+        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
