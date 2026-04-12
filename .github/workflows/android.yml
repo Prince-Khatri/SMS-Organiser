@@ -59,7 +59,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v1.0.${{ github.run_number }}
-        name: SMS Organiser v1.0.${{ github.run_number }}
-        files: app-release-final.apk 
+        name: SMS Organizer v1.0.${{ github.run_number }}
+        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
